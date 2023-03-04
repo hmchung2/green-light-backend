@@ -1,5 +1,3 @@
-import { ApolloServer } from "@apollo/server";
-
 export default `#graphql
   type User {
     id: Int!

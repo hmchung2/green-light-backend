@@ -1,7 +1,12 @@
-import { ApolloServer } from "@apollo/server";
+import { gql } from "graphql-tag";
 
-export default `#graphql
-    type Mutation {
-        createAccount(username : String!) : String
-    }
+export default gql`
+  type Mutation {
+    createAccount(
+      username: String!
+      password: String!
+      email: String
+      instaUsername: String
+    ): MutationResponse
+  }
 `;

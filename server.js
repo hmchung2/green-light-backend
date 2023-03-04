@@ -1,25 +1,22 @@
+require("dotenv").config();
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
+import { typeDefs, resolvers } from "./schema";
 
-import { loadFilesSync } from "@graphql-tools/load-files";
-import { mergeResolvers } from "@graphql-tools/merge";
-import { mergeTypeDefs } from "@graphql-tools/merge";
+const PORT = process.env.PORT;
 
-const loadedTypes = loadFilesSync(`${__dirname}/**/*.typeDefs.js`);
-const loadedResolvers = loadFilesSync(`${__dirname}/**/*.resolvers.js`);
+async function startServer() {
+  const server = new ApolloServer({
+    typeDefs,
+    playground: true,
+    resolvers,
+  });
 
-const typeDefs = mergeTypeDefs(loadedTypes);
-const resolvers = mergeResolvers(loadedResolvers);
+  const { url } = await startStandaloneServer(server, {
+    listen: { port: PORT },
+  });
 
-// const PORT = process.env.PORT;
+  console.log(`🚀  Server ready at: ${url}`);
+}
 
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-});
-
-const { url } = await startStandaloneServer(server, {
-  listen: { port: 4000 },
-});
-
-console.log(`🚀  Server ready at: ${url}`);
+startServer();

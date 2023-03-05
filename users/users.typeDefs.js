@@ -1,9 +1,11 @@
-export default `#graphql
+import { gql } from "graphql-tag";
+
+export default gql`
   type User {
     id: Int!
     username: String!
     sex: String!
-    interestingSex : String!
+    interestingSex: String!
     password: String!
     instaUsername: String
     email: String
@@ -14,8 +16,7 @@ export default `#graphql
     updatedAt: String!
   }
 
-  type Query{
-    Users : [User]
+  type Query {
+    Users: [User]
   }
-
 `;

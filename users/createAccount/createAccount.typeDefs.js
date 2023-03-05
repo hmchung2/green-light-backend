@@ -5,6 +5,8 @@ export default gql`
     createAccount(
       username: String!
       password: String!
+      sex: String!
+      interestingSex: String!
       email: String
       instaUsername: String
     ): MutationResponse

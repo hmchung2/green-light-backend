@@ -2,6 +2,8 @@ export default `#graphql
   type User {
     id: Int!
     username: String!
+    sex: String!
+    interestingSex : String!
     password: String!
     instaUsername: String
     email: String

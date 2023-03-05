@@ -3,7 +3,10 @@ import bcrypt from "bcrypt";
 
 export default {
   Mutation: {
-    createAccount: async (_, { username, password, email, instaUsername }) => {
+    createAccount: async (
+      _,
+      { username, password, sex, interestingSex, email, instaUsername }
+    ) => {
       try {
         const existingUser = await client.user.findFirst({
           where: {
@@ -30,6 +33,8 @@ export default {
         await client.user.create({
           data: {
             username,
+            sex,
+            interestingSex,
             email,
             instaUsername,
             password: bcyrptPassword,

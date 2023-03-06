@@ -12,6 +12,12 @@ export default {
           error: "User does not exist",
         };
       }
+      if (ok.interestingSex != loggedInUser.sex && ok.interestingSex !== "B") {
+        return {
+          ok: false,
+          error: "User not interested",
+        };
+      }
 
       await client.user.update({
         where: {

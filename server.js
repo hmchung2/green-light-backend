@@ -2,7 +2,7 @@ require("dotenv").config();
 import express from "express";
 import http from "http";
 import { ApolloServer } from "apollo-server-express";
-import { startStandaloneServer } from "@apollo/server/standalone";
+// import { startStandaloneServer } from "@apollo/server/standalone";
 import { typeDefs, resolvers } from "./schema";
 import { getUser } from "./users/users.utils";
 
@@ -25,6 +25,8 @@ async function startServer() {
 
   const app = express();
   server.applyMiddleware({ app });
+  app.use("/static", express.static("uploads"));
+  // app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
 
   const httpServer = http.createServer(app);
 

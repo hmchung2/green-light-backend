@@ -1,6 +1,7 @@
 {
   "name": "green-light-backend",
   "version": "1.0.0",
+  "type": "module",
   "description": "New Way of making connections. Time to increase the birth rate and save Korea.",
   "main": "index.js",
   "keywords": [],
@@ -20,8 +21,10 @@
     "bcrypt": "^5.1.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "fs": "^0.0.1-security",
     "graphql": "^16.6.0",
     "graphql-tag": "^2.12.6",
+    "graphql-upload": "^16.0.2",
     "http": "^0.0.1-security",
     "jsonwebtoken": "^9.0.0"
   },

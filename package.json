@@ -1,7 +1,6 @@
 {
   "name": "green-light-backend",
   "version": "1.0.0",
-  "type": "module",
   "description": "New Way of making connections. Time to increase the birth rate and save Korea.",
   "main": "index.js",
   "keywords": [],
@@ -24,7 +23,7 @@
     "fs": "^0.0.1-security",
     "graphql": "^16.6.0",
     "graphql-tag": "^2.12.6",
-    "graphql-upload": "^16.0.2",
+    "graphql-upload": "^15.0.2",
     "http": "^0.0.1-security",
     "jsonwebtoken": "^9.0.0"
   },
@@ -35,5 +34,13 @@
     "@babel/preset-env": "^7.20.2",
     "nodemon": "^2.0.20",
     "prisma": "^4.11.0"
+  },
+  "exports": {
+    "./GraphQLUpload.js": "./GraphQLUpload.js",
+    "./graphqlUploadExpress.js": "./graphqlUploadExpress.js",
+    "./graphqlUploadKoa.js": "./graphqlUploadKoa.js",
+    "./package.json": "./package.json",
+    "./processRequest.js": "./processRequest.js",
+    "./Upload.js": "./Upload.js"
   }
 }

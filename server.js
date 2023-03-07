@@ -5,6 +5,7 @@ import { ApolloServer } from "apollo-server-express";
 // import { startStandaloneServer } from "@apollo/server/standalone";
 import { typeDefs, resolvers } from "./schema";
 import { getUser } from "./users/users.utils";
+import graphqlUploadKoa from "graphql-upload/graphqlUploadKoa.js";
 
 const PORT = process.env.PORT;
 

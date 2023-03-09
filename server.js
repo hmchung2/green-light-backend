@@ -5,7 +5,7 @@ import { ApolloServer } from "apollo-server-express";
 // import { startStandaloneServer } from "@apollo/server/standalone";
 import { typeDefs, resolvers } from "./schema";
 import { getUser } from "./users/users.utils";
-import graphqlUploadKoa from "graphql-upload/graphqlUploadKoa.js";
+import graphqlUploadExpress from "graphql-upload/graphqlUploadExpress.js";
 
 const PORT = process.env.PORT;
 
@@ -25,6 +25,7 @@ async function startServer() {
   await server.start(); // add this line
 
   const app = express();
+  app.use(graphqlUploadExpress());
   server.applyMiddleware({ app });
   app.use("/static", express.static("uploads"));
   // app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));

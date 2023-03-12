@@ -12,6 +12,8 @@ export default gql`
     following: [User]
     followers: [User]
     avatar: String
+    photos: [Photo]
+    introduction: String
     createdAt: String!
     updatedAt: String!
   }

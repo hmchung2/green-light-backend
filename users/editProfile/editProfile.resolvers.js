@@ -17,6 +17,7 @@ export default {
           avatar,
           email,
           instaUsername,
+          introduction,
         },
         { loggedInUser }
       ) => {
@@ -41,6 +42,7 @@ export default {
             interestingSex,
             email,
             instaUsername,
+            introduction,
             ...(uglyPassword && { password: uglyPassword }),
             ...(avatarUrl && { avatar: avatarUrl }),
           },

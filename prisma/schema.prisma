@@ -19,8 +19,19 @@ model User {
   avatar         String?
   followers      User[]   @relation("FollowRelation")
   following      User[]   @relation("FollowRelation")
+  photos         Photo[]
+  introduction   String?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+}
+
+model Photo {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  file      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model temp {

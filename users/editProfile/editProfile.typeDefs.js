@@ -12,6 +12,7 @@ export default gql`
       avatar: Upload
       email: String
       instaUsername: String
+      introduction: String
     ): MutationResponse!
   }
 `;

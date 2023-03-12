@@ -13,9 +13,11 @@ export default gql`
     followers: [User]
     avatar: String
     photos: [Photo]
+    location: Location
     introduction: String
     createdAt: String!
     updatedAt: String!
+    isFollowing: Boolean!
   }
 
   type Query {

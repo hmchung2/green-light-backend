@@ -4,7 +4,6 @@ import { protectedResolver } from "../users.utils";
 export default {
   Mutation: {
     followUser: protectedResolver(async (_, { id }, { loggedInUser }) => {
-      console.log("Reached here : " + id);
       const ok = await client.user.findUnique({ where: { id } });
       if (!ok) {
         return {

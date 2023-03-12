@@ -30,16 +30,26 @@ export default {
         }
         const bcyrptPassword = await bcrypt.hash(password, 10);
 
-        await client.user.create({
-          data: {
-            username,
-            sex,
-            interestingSex,
-            email,
-            instaUsername,
-            password: bcyrptPassword,
-          },
-        });
+        await client.$transaction([
+          client.user.create({
+            data: {
+              username,
+              sex,
+              interestingSex,
+              email,
+              instaUsername,
+              password: bcyrptPassword,
+            },
+          }),
+          client.location.create({
+            data: {
+              user: {
+                connect: { username },
+              },
+            },
+          }),
+        ]);
+
         return {
           ok: true,
         };

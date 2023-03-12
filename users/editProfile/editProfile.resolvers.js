@@ -2,6 +2,7 @@ import { createWriteStream } from "fs";
 import client from "../../client";
 import bcrypt from "bcrypt";
 import { protectedResolver } from "../users.utils";
+import { uploadToS3 } from "../../shared/shared.utils";
 
 export default {
   Mutation: {
@@ -12,7 +13,7 @@ export default {
           username,
           sex,
           interestingSex,
-          password,
+          password: newPassword,
           avatar,
           email,
           instaUsername,
@@ -21,20 +22,38 @@ export default {
       ) => {
         let avatarUrl = null;
         if (avatar) {
-          const { file } = await avatar;
-          const { filename, createReadStream } = file;
-          console.log(filename);
-          console.log(avatar);
-          console.log("createReadStream type", typeof createReadStream);
-          const newFilename = `${loggedInUser.id}-${Date.now()}-${filename}`;
-          const readStream = createReadStream();
-          const writeStream = createWriteStream(
-            process.cwd() + "/uploads/" + newFilename
-          );
-          readStream.pipe(writeStream);
-          avatarUrl = `http://localhost:4000/static/${newFilename}`;
+          avatarUrl = await uploadToS3(avatar, loggedInUser.id, "avatars");
+          console.log("avatarUrl : ", avatarUrl);
         }
-        return { ok: true };
+
+        let uglyPassword = null;
+        if (newPassword) {
+          uglyPassword = await bcrypt.hash(newPassword, 10);
+        }
+
+        const updatedUser = await client.user.update({
+          where: {
+            id: loggedInUser.id,
+          },
+          data: {
+            username,
+            sex,
+            interestingSex,
+            email,
+            instaUsername,
+            ...(uglyPassword && { password: uglyPassword }),
+            ...(avatarUrl && { avatar: avatarUrl }),
+          },
+        });
+
+        if (updatedUser.id) {
+          return { ok: true };
+        } else {
+          return {
+            ok: false,
+            error: "Could not update the profile",
+          };
+        }
       }
     ),
   },

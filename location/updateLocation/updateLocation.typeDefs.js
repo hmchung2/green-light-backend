@@ -2,6 +2,6 @@ import { gql } from "graphql-tag";
 
 export default gql`
   type Mutation {
-    updateLocation(userId: Int!): MutationResponse
+    updateLocation(lat: Float!, lon: Float!): MutationResponse
   }
 `;

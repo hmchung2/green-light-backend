@@ -20,6 +20,21 @@ async function startServer() {
         loggedInUser: await getUser(ctx.req.headers.token),
       };
     },
+    subscriptions: {
+      onConnect: async ({ token }) => {
+        if (!token) {
+          throw new Error("You can't listen.");
+        }
+        console.log("token~~~~~~~~~");
+        console.log(token);
+        const loggedInUser = await getUser(token);
+        console.log("Logged~~~~~~~~~~~");
+        console.log(loggedInUser);
+        return {
+          loggedInUser,
+        };
+      },
+    },
   });
 
   await server.start(); // add this line
@@ -28,9 +43,8 @@ async function startServer() {
   app.use(graphqlUploadExpress());
   server.applyMiddleware({ app });
   app.use("/static", express.static("uploads"));
-  // app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
-
   const httpServer = http.createServer(app);
+  server.installSubscriptionHandlers(httpServer);
 
   httpServer.listen(PORT, () => {
     console.log(`🚀Server is running on http://localhost:${PORT}/graphql ✅`);

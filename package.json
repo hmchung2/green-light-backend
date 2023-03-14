@@ -29,7 +29,8 @@
     "graphql-tag": "^2.12.6",
     "graphql-upload": "^15.0.2",
     "http": "^0.0.1-security",
-    "jsonwebtoken": "^9.0.0"
+    "jsonwebtoken": "^9.0.0",
+    "subscriptions-transport-ws": "^0.11.0"
   },
   "devDependencies": {
     "@babel/core": "^7.21.0",

@@ -6,9 +6,12 @@ import { ApolloServer } from "apollo-server-express";
 import schema from "./schema";
 import { getUser } from "./users/users.utils";
 import graphqlUploadExpress from "graphql-upload/graphqlUploadExpress.js";
-import { SubscriptionServer } from "subscriptions-transport-ws";
-import { execute, subscribe } from "graphql";
-import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
+// import { SubscriptionServer } from "subscriptions-transport-ws";
+// import { execute, subscribe } from "graphql";
+// import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
+import WebSocket, { WebSocketServer as WSWebSocketServer } from "ws";
+import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
+import { useServer } from "graphql-ws/lib/use/ws";
 
 const PORT = process.env.PORT;
 
@@ -19,22 +22,16 @@ async function startServer() {
   app.use("/static", express.static("uploads"));
   const httpServer = http.createServer(app);
 
-  const subscriptionServer = SubscriptionServer.create(
-    {
-      schema,
-      execute,
-      subscribe,
-      async onConnect({ token }, webSocket, context) {
-        if (token === undefined) {
-          throw new Error("You can't listen.");
-        }
-        const foundUser = await getUser(token);
-        return { loggedInUser: foundUser };
-      },
-      onDisconnect(webScoket, context) {},
-    },
-    { server: httpServer, path: "/graphql" }
-  );
+  const WebSocketServer = WebSocket.Server || WSWebSocketServer;
+  const wsServer = new WebSocketServer({
+    // This is the `httpServer` we created in a previous step.
+    server: httpServer,
+    // Pass a different path here if app.use
+    // serves expressMiddleware at a different path
+    path: "/graphql",
+  });
+
+  const serverCleanup = useServer({ schema }, wsServer);
 
   const server = new ApolloServer({
     schema,
@@ -46,12 +43,12 @@ async function startServer() {
       };
     },
     plugins: [
-      ApolloServerPluginLandingPageGraphQLPlayground,
+      ApolloServerPluginDrainHttpServer({ httpServer }),
       {
         async serverWillStart() {
           return {
             async drainServer() {
-              subscriptionServer.close();
+              serverCleanup.dispose();
             },
           };
         },
@@ -69,25 +66,21 @@ async function startServer() {
 
 startServer();
 
-// async function startServer() {
-//   const server = new ApolloServer({
-//     typeDefs,
-//     resolvers,
-//     playground: true,
-//     context: async (ctx) => {
-//       console.log("context");
-//       console.log(ctx.req);
-//       return {
-//         loggedInUser: await getUser(ctx.req.headers.token),
-//       };
+// const subscriptionServer = SubscriptionServer.create(
+//   {
+//     schema,
+//     execute,
+//     subscribe,
+//     async onConnect({ token }, webSocket, context) {
+//       if (token === undefined) {
+//         throw new Error("You can't listen.");
+//       }
+//       console.log("subscribing?");
+//       const loggedInUser = await getUser(token);
+//       console.log("subscribing happend");
+//       return { loggedInUser };
 //     },
-//   });
-
-//   const { url } = await startStandaloneServer(server, {
-//     listen: { port: PORT },
-//   });
-
-//   console.log(`🚀  Server ready at: ${url}`);
-// }
-
-// startServer();
+//     onDisconnect(webScoket, context) {},
+//   },
+//   { server: httpServer, path: "/graphql" }
+// );

@@ -66,9 +66,6 @@ export default {
           },
         });
 
-        console.log("message : ");
-        console.log(message);
-
         pubsub.publish(NEW_MESSAGE, { roomUpdates: { ...message } });
         // pubsub.publish("MESSAGE_UPDATES", { messageUpdates: createdMessage });
 

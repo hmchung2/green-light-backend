@@ -7,9 +7,7 @@ export default {
   Subscription: {
     roomUpdates: {
       subscribe: async (root, args, context, info) => {
-        console.log("subscribe");
-        console.log(args);
-        console.log(context.loggedInUser);
+        console.log("roomUpdates");
         const room = await client.room.findFirst({
           where: {
             id: args.id,
@@ -24,14 +22,12 @@ export default {
           },
         });
         console.log("happening");
-        console.log(room);
         if (!room) {
           throw new Error("You shall not see this.");
         }
         return withFilter(
           () => pubsub.asyncIterator(NEW_MESSAGE),
           async ({ roomUpdates }, { id }, { loggedInUser }) => {
-            console.log("roomUpdates : ", roomUpdates);
             if (roomUpdates.roomId === id) {
               const room = await client.room.findFirst({
                 where: {

@@ -31,13 +31,43 @@ async function startServer() {
     path: "/graphql",
   });
 
-  const serverCleanup = useServer({ schema }, wsServer);
+  const getDynamicContext = async (ctx, msg, args) => {
+    // ctx is the graphql-ws Context where connectionParams live
+    if (ctx.connectionParams.token) {
+      console.log("dynamic token found");
+      const loggedInUser = await getUser(ctx.connectionParams.token);
+      return { loggedInUser };
+    }
+    console.log("dynamic token not found !!!!!!!");
+    // // Otherwise let our resolvers know we don't have a current user
+    return { loggedInUser: null };
+  };
+
+  const serverCleanup = useServer(
+    {
+      schema,
+      context: async (ctx, msg, args) => {
+        return getDynamicContext(ctx, msg, args);
+      },
+      onConnect: async (ctx) => {
+        console.log("on connect");
+        if (!ctx.connectionParams.token) {
+          throw new Error("Auth token missing!");
+        }
+      },
+      onDisconnect(ctx, code, reason) {
+        console.log("Disconnected");
+      },
+    },
+    wsServer
+  );
 
   const server = new ApolloServer({
     schema,
     playground: true,
     introspection: true,
     context: async (ctx) => {
+      console.log("http");
       return {
         loggedInUser: await getUser(ctx.req.headers.token),
       };

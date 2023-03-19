@@ -26,17 +26,10 @@ export default {
               mapUpdates.userId === userId &&
               mapUpdates.userId === loggedInUser.id
             ) {
-              const location = await client.location.findFirst({
-                where: {
-                  userId: loggedInUser.id,
-                },
-                select: { userId: true },
-              });
-              if (!location) {
-                return false;
-              }
               console.log("map update validated returning true");
               return true;
+            } else {
+              return false;
             }
           }
         )(root, args, context, info);

@@ -6,7 +6,7 @@ import { calculateDistance, protectedResolver } from "../../users/users.utils";
 export default {
   Mutation: {
     updateLocation: protectedResolver(
-      async (_, { lat, lon }, { loggedInUser }) => {
+      async (_, { lat, lon, maxD }, { loggedInUser }) => {
         try {
           // Update the location record in the database
           await client.location.update({
@@ -34,6 +34,9 @@ export default {
                     gte: lon - 0.05,
                     lte: lon + 0.05,
                   },
+                  user: {
+                    sex: loggedInUser.sex === "M" ? "F" : "M",
+                  },
                 },
               ],
             },
@@ -58,7 +61,7 @@ export default {
               };
             })
             .filter((location) => {
-              return location.vectorDistance <= 150;
+              return location.vectorDistance <= maxD ? maxD : 150;
             });
 
           pubsub.publish(NEW_LOCATION, { mapUpdates: filteredLocations });

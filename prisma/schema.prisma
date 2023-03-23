@@ -26,6 +26,8 @@ model User {
   rooms          Room[]
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
+  userType       String
+  userStatus     String?
 }
 
 model Location {

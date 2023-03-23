@@ -1,5 +1,9 @@
-import { S3Client } from "@aws-sdk/client-s3";
+import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
+
+const region = "ap-northeast-2";
+const bucketName = "instaclone-uploads-hmchung";
+const fullBucketUrl = `https://${bucketName}.s3.${region}.amazonaws.com/`;
 
 const s3client = new S3Client({
   region: "ap-northeast-2",
@@ -8,6 +12,25 @@ const s3client = new S3Client({
     secretAccessKey: process.env.AWS_SECRET,
   },
 });
+
+export const deleteFromS3 = async (fileUrl) => {
+  const decodedUrl = decodeURI(fileUrl).split(fullBucketUrl)[1];
+  console.log("decodedUrl : ", decodedUrl);
+
+  const input = {
+    Bucket: bucketName,
+    Key: decodedUrl,
+  };
+  try {
+    const command = new DeleteObjectCommand(input);
+    await s3client.send(command);
+    console.log(`Deleted file ${decodedUrl} from S3 bucke`);
+    return true;
+  } catch (err) {
+    console.error(`Error deleting file ${decodedUrl} from S3 bucket : ${err}`);
+    return false;
+  }
+};
 
 export const uploadToS3 = async (file, userId, folderName) => {
   const cfile = await file;
@@ -28,7 +51,7 @@ export const uploadToS3 = async (file, userId, folderName) => {
   const upload = new Upload({
     client: s3client,
     params: {
-      Bucket: "instaclone-uploads-hmchung",
+      Bucket: bucketName,
       Key: objectName,
       Body: readStream,
       ACL: "public-read",
@@ -45,17 +68,3 @@ export const uploadToS3 = async (file, userId, folderName) => {
     return null;
   }
 };
-
-// // AWS S3 버킷에서 사진을 삭제하는 함수
-// export const handleDeletePhotoFromAWS = async (fileUrl, folderName) => {
-//   const decodedUrl = decodeURI(fileUrl);
-//   const filePath = decodedUrl.split("/" + folderName + "/")[1];
-//   const fileName = `${folderName}/${filePath}`;
-
-//   await new S3()
-//     .deleteObject({
-//       Bucket: "instaclone-uploads-hmchung", // 본인 버킷 이름
-//       Key: fileName,
-//     })
-//     .promise();
-// };

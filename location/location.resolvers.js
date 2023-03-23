@@ -7,20 +7,25 @@ export default {
 
     isFollowing: async ({ userId }, _, { loggedInUser }) => {
       if (!loggedInUser) {
+        console.log("not loged in");
         return false;
       }
-      const exists = await client.user.count({
+      console.log("userId : " + userId);
+      console.log("loggedInuser : ", loggedInUser);
+
+      const exist = await client.user.count({
         where: {
           id: loggedInUser.id,
           following: {
             some: {
-              userId,
+              id: userId,
             },
           },
         },
       });
-      return Boolean(exists);
+      return Boolean(exist);
     },
+
     isMe: async ({ userId }, _, { loggedInUser }) => {
       if (!loggedInUser) {
         return false;
@@ -29,7 +34,3 @@ export default {
     },
   },
 };
-
-function deg2rad(deg) {
-  return deg * (Math.PI / 180);
-}

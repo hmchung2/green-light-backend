@@ -6,5 +6,8 @@ export default gql`
     user: User!
     lat: Float
     lon: Float
+    isFollowing: Boolean!
+    isMe: Boolean!
+    vectorDistance: Float
   }
 `;

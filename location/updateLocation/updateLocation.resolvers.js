@@ -1,5 +1,7 @@
 import client from "../../client";
-import { protectedResolver } from "../../users/users.utils";
+import { NEW_LOCATION } from "../../constant";
+import pubsub from "../../pubsub";
+import { calculateDistance, protectedResolver } from "../../users/users.utils";
 
 export default {
   Mutation: {
@@ -19,6 +21,48 @@ export default {
               lon,
             },
           });
+
+          const locations = await client.location.findMany({
+            where: {
+              AND: [
+                {
+                  lat: {
+                    gte: lat - 0.05,
+                    lte: lat + 0.05,
+                  },
+                  lon: {
+                    gte: lon - 0.05,
+                    lte: lon + 0.05,
+                  },
+                },
+              ],
+            },
+            select: {
+              userId: true,
+              user: true,
+              lat: true,
+              lon: true,
+            },
+          });
+
+          const filteredLocations = locations
+            .map((location) => {
+              return {
+                ...location,
+                vectorDistance: calculateDistance(
+                  location.lat,
+                  location.lon,
+                  lat,
+                  lon
+                ),
+              };
+            })
+            .filter((location) => {
+              return location.vectorDistance <= 150;
+            });
+
+          pubsub.publish(NEW_LOCATION, { mapUpdates: filteredLocations });
+
           return { ok: true };
         } catch (e) {
           console.log("error : ", e);

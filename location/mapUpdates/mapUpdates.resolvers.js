@@ -22,13 +22,12 @@ export default {
         return withFilter(
           () => pubsub.asyncIterator(NEW_LOCATION),
           async ({ mapUpdates }, { userId }, { loggedInUser }) => {
-            if (
-              mapUpdates.userId === userId &&
-              mapUpdates.userId === loggedInUser.id
-            ) {
+            console.log("filtering");
+            if (userId === loggedInUser.id) {
               console.log("map update validated returning true");
               return true;
             } else {
+              console.log("returning false");
               return false;
             }
           }

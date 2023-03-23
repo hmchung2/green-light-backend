@@ -39,6 +39,8 @@ export default {
               email,
               instaUsername,
               password: bcyrptPassword,
+              userType: "P",
+              userStatus: "M",
             },
           }),
           client.location.create({

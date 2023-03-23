@@ -36,6 +36,8 @@ export default {
                   },
                   user: {
                     sex: loggedInUser.sex === "M" ? "F" : "M",
+                    userType: "P",
+                    userStatus: "M",
                   },
                 },
               ],

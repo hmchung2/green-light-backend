@@ -24,10 +24,11 @@ model User {
   location       Location?
   Message        Message[]
   rooms          Room[]
+  Freeze         Freeze[]
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   userType       String
-  userStatus     String?
+  userStatus     String
 }
 
 model Location {
@@ -56,6 +57,14 @@ model Message {
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Freeze {
+  id           Int      @id @default(autoincrement())
+  freezerId    Int
+  freezedUsers User[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Room {

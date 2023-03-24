@@ -3,9 +3,9 @@ import { calculateDistance, protectedResolver } from "../../users/users.utils";
 
 export default {
   Mutation: {
-    freeze: protectedResolver(
+    freezeMoment: protectedResolver(
       async (_, { lat, lon, maxD }, { loggedInUser }) => {
-        const freezeCounts = client.freeze.count({
+        const freezeCounts = await client.freeze.count({
           where: {
             freezerId: loggedInUser.id,
           },

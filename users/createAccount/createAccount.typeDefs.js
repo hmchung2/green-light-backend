@@ -9,6 +9,6 @@ export default gql`
       interestingSex: String!
       email: String
       instaUsername: String
-    ): MutationResponse
+    ): MutationResponse!
   }
 `;

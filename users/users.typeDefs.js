@@ -6,6 +6,8 @@ export default gql`
     username: String!
     sex: String!
     interestingSex: String!
+    age: Int!
+    phoneNo: String!
     password: String!
     instaUsername: String
     email: String

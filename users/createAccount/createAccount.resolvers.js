@@ -5,7 +5,16 @@ export default {
   Mutation: {
     createAccount: async (
       _,
-      { username, password, sex, interestingSex, email, instaUsername }
+      {
+        username,
+        password,
+        sex,
+        interestingSex,
+        age,
+        phoneNo,
+        email,
+        instaUsername,
+      }
     ) => {
       try {
         const existingUser = await client.user.findFirst({
@@ -20,12 +29,15 @@ export default {
               {
                 instaUsername,
               },
+              {
+                phoneNo,
+              },
             ],
           },
         });
         if (existingUser) {
           throw new Error(
-            "This usernam or instaUsername or email is already taken."
+            "This usernam or instaUsername or email or phoneNo  is already taken."
           );
         }
         const bcyrptPassword = await bcrypt.hash(password, 10);
@@ -36,6 +48,8 @@ export default {
               username,
               sex,
               interestingSex,
+              age,
+              phoneNo,
               email,
               instaUsername,
               password: bcyrptPassword,
@@ -61,6 +75,41 @@ export default {
           ok: false,
           error: e,
         };
+      }
+    },
+  },
+  Query: {
+    validCreateAccount: async (
+      _,
+      { username, instaUsername, phoneNo, email }
+    ) => {
+      const whereClause = [];
+      if (username) {
+        whereClause.push({ username });
+      }
+      if (email) {
+        whereClause.push({ email });
+      }
+      if (instaUsername) {
+        whereClause.push({ instaUsername });
+      }
+      if (phoneNo) {
+        whereClause.push({ phoneNo });
+      }
+
+      if (whereClause.length == 0) {
+        throw new Error("No parameter");
+      }
+
+      const existingUser = await client.user.findFirst({
+        where: {
+          OR: whereClause,
+        },
+      });
+      if (existingUser) {
+        return { ok: true };
+      } else {
+        return { ok: false };
       }
     },
   },

@@ -1,5 +1,8 @@
 import client from "../../client";
 import { protectedResolver } from "../../users/users.utils";
+import pubsub from "../../pubsub";
+import { NEW_LOCATION } from "../../constant";
+import { calculateDistance } from "../../users/users.utils";
 
 export default {
   Query: {
@@ -58,7 +61,7 @@ export default {
           };
         })
         .filter((location) => {
-          return location.vectorDistance <= maxD ? maxD : 150;
+          return location.vectorDistance <= 150;
         });
       return filteredLocations;
     }),

@@ -9,7 +9,7 @@ export default {
       async (_, { lat, lon, maxD }, { loggedInUser }) => {
         try {
           // Update the location record in the database
-          await client.location.update({
+          const location = await client.location.update({
             where: {
               // Define the conditions to find the location record to update
               // For example, you could use the user ID to identify the location of the user
@@ -22,52 +22,53 @@ export default {
             },
           });
 
-          const locations = await client.location.findMany({
-            where: {
-              AND: [
-                {
-                  lat: {
-                    gte: lat - 0.05,
-                    lte: lat + 0.05,
-                  },
-                  lon: {
-                    gte: lon - 0.05,
-                    lte: lon + 0.05,
-                  },
-                  user: {
-                    sex: loggedInUser.sex === "M" ? "F" : "M",
-                    userType: "P",
-                    userStatus: "M",
-                  },
-                },
-              ],
-            },
-            select: {
-              userId: true,
-              user: true,
-              lat: true,
-              lon: true,
-            },
+          // const locations = await client.location.findMany({
+          //   where: {
+          //     AND: [
+          //       {
+          //         lat: {
+          //           gte: lat - 0.05,
+          //           lte: lat + 0.05,
+          //         },
+          //         lon: {
+          //           gte: lon - 0.05,
+          //           lte: lon + 0.05,
+          //         },
+          //         user: {
+          //           sex: loggedInUser.sex === "M" ? "F" : "M",
+          //           userType: "P",
+          //           userStatus: "M",
+          //         },
+          //       },
+          //     ],
+          //   },
+          //   select: {
+          //     userId: true,
+          //     user: true,
+          //     lat: true,
+          //     lon: true,
+          //   },
+          // });
+
+          // const filteredLocations = locations
+          //   .map((location) => {
+          //     return {
+          //       ...location,
+          //       vectorDistance: calculateDistance(
+          //         location.lat,
+          //         location.lon,
+          //         lat,
+          //         lon
+          //       ),
+          //     };
+          //   })
+          //   .filter((location) => {
+          //     return location.vectorDistance <= maxD ? maxD : 150;
+          //   });
+
+          pubsub.publish(NEW_LOCATION, {
+            mapUpdates: { ...location, user: { ...loggedInUser } },
           });
-
-          const filteredLocations = locations
-            .map((location) => {
-              return {
-                ...location,
-                vectorDistance: calculateDistance(
-                  location.lat,
-                  location.lon,
-                  lat,
-                  lon
-                ),
-              };
-            })
-            .filter((location) => {
-              return location.vectorDistance <= maxD ? maxD : 150;
-            });
-
-          pubsub.publish(NEW_LOCATION, { mapUpdates: filteredLocations });
-
           return { ok: true };
         } catch (e) {
           console.log("error : ", e);

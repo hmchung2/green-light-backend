@@ -2,6 +2,7 @@ import { withFilter } from "graphql-subscriptions";
 import pubsub from "../../pubsub";
 import client from "../../client";
 import { NEW_LOCATION } from "../../constant";
+import { calculateDistance } from "../../users/users.utils";
 
 export default {
   Subscription: {
@@ -21,15 +22,37 @@ export default {
 
         return withFilter(
           () => pubsub.asyncIterator(NEW_LOCATION),
-          async ({ mapUpdates }, { userId }, { loggedInUser }) => {
-            console.log("filtering");
-            if (userId === loggedInUser.id) {
-              console.log("map update validated returning true");
-              return true;
-            } else {
-              console.log("returning false");
-              return false;
+          async (
+            { mapUpdates },
+            { userId, generalLat, generalLon },
+            { loggedInUser }
+          ) => {
+            if (
+              Math.abs(generalLat - mapUpdates.lat) < 0.05 &&
+              Math.abs(generalLon - mapUpdates.lon) < 0.05
+            ) {
+              if (mapUpdates.user.sex != loggedInUser.sex) {
+                const userDetailLocation = await client.location.findUnique({
+                  where: {
+                    userId,
+                  },
+                  select: { lat: true, lon: true },
+                });
+
+                if (
+                  calculateDistance(
+                    userDetailLocation.lat,
+                    userDetailLocation.lon,
+                    mapUpdates.lat,
+                    mapUpdates.lon
+                  ) < 150
+                ) {
+                  return true;
+                }
+              }
             }
+
+            return false;
           }
         )(root, args, context, info);
       },

@@ -6,7 +6,7 @@ import { calculateDistance, protectedResolver } from "../../users/users.utils";
 export default {
   Mutation: {
     updateLocation: protectedResolver(
-      async (_, { lat, lon, maxD }, { loggedInUser }) => {
+      async (_, { lat, lon }, { loggedInUser }) => {
         try {
           // Update the location record in the database
           const location = await client.location.update({

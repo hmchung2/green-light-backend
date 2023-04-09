@@ -1,13 +1,19 @@
 import { gql } from "graphql-tag";
 
 export default gql`
+  type validResponse {
+    ok: Boolean!
+    error: String
+    nextPage: String
+  }
+
   type Mutation {
     createAccount(
       username: String!
       password: String!
       sex: String!
       interestingSex: String!
-      age: Int!
+      birthDay: String!
       phoneNo: String!
       email: String
       instaUsername: String
@@ -20,6 +26,7 @@ export default gql`
       instaUsername: String
       phoneNo: String
       email: String
-    ): MutationResponse!
+      nextPage: String
+    ): validResponse!
   }
 `;

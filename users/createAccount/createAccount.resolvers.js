@@ -10,7 +10,7 @@ export default {
         password,
         sex,
         interestingSex,
-        age,
+        birthDay,
         phoneNo,
         email,
         instaUsername,
@@ -48,7 +48,7 @@ export default {
               username,
               sex,
               interestingSex,
-              age,
+              birthDay,
               phoneNo,
               email,
               instaUsername,
@@ -81,8 +81,9 @@ export default {
   Query: {
     validCreateAccount: async (
       _,
-      { username, instaUsername, phoneNo, email }
+      { username, instaUsername, phoneNo, email, nextPage }
     ) => {
+      console.log("happening");
       const whereClause = [];
       if (username) {
         whereClause.push({ username });
@@ -106,10 +107,11 @@ export default {
           OR: whereClause,
         },
       });
+      console.log("existingUser : ", existingUser);
       if (existingUser) {
-        return { ok: true };
+        return { ok: false, error: "existing user" };
       } else {
-        return { ok: false };
+        return { ok: true, nextPage: nextPage };
       }
     },
   },

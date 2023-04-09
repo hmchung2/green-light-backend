@@ -13,10 +13,11 @@ model User {
   username       String    @unique
   sex            String
   interestingSex String
+  interestingAge Int?
   instaUsername  String    @unique
   password       String
   email          String?   @unique
-  age            Int
+  birthDay       DateTime
   phoneNo        String    @unique
   avatar         String?
   followers      User[]    @relation("FollowRelation")

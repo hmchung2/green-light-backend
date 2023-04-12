@@ -1,5 +1,6 @@
 import client from "../../client";
 import bcrypt from "bcrypt";
+import { uploadToS3 } from "../../shared/shared.utils";
 
 export default {
   Mutation: {
@@ -14,6 +15,7 @@ export default {
         phoneNo,
         email,
         instaUsername,
+        avatar,
       }
     ) => {
       try {
@@ -42,6 +44,12 @@ export default {
         }
         const bcyrptPassword = await bcrypt.hash(password, 10);
 
+        let avatarUrl = null;
+        if (avatar) {
+          avatarUrl = await uploadToS3(avatar, username, "avatars");
+          console.log("avatarUrl : ", avatarUrl);
+        }
+
         await client.$transaction([
           client.user.create({
             data: {
@@ -55,6 +63,7 @@ export default {
               password: bcyrptPassword,
               userType: "P",
               userStatus: "M",
+              ...(avatarUrl && { avatar: avatarUrl }),
             },
           }),
           client.location.create({

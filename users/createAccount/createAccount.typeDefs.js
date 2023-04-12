@@ -17,6 +17,7 @@ export default gql`
       phoneNo: String!
       email: String
       instaUsername: String
+      avatar: Upload
     ): MutationResponse!
   }
 

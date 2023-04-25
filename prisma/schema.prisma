@@ -12,13 +12,13 @@ model User {
   id             Int       @id @default(autoincrement())
   username       String    @unique
   sex            String
-  interestingSex String
+  interestingSex String?
   interestingAge Int?
-  instaUsername  String    @unique
+  instaUsername  String?   @unique
   password       String
   email          String?   @unique
   birthDay       DateTime
-  phoneNo        String    @unique
+  phoneNo        String?   @unique
   avatar         String?
   followers      User[]    @relation("FollowRelation")
   following      User[]    @relation("FollowRelation")

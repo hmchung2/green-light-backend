@@ -12,9 +12,9 @@ export default gql`
       username: String!
       password: String!
       sex: String!
-      interestingSex: String!
+      interestingSex: String
       birthDay: String!
-      phoneNo: String!
+      phoneNo: String
       email: String
       instaUsername: String
       avatar: Upload

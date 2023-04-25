@@ -43,9 +43,10 @@ export default {
           );
         }
         const bcyrptPassword = await bcrypt.hash(password, 10);
-
+        console.log("avatar : ", avatar);
         let avatarUrl = null;
         if (avatar) {
+          console.log("avatar exists : ", avatar);
           avatarUrl = await uploadToS3(avatar, username, "avatars");
           console.log("avatarUrl : ", avatarUrl);
         }

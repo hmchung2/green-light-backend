@@ -2,22 +2,22 @@ require("dotenv").config();
 import express from "express";
 import http from "http";
 import { ApolloServer } from "apollo-server-express";
-// import { startStandaloneServer } from "@apollo/server/standalone";
+import logger from "morgan";
 import schema from "./schema";
 import { getUser } from "./users/users.utils";
 import graphqlUploadExpress from "graphql-upload/graphqlUploadExpress.js";
-// import { SubscriptionServer } from "subscriptions-transport-ws";
-// import { execute, subscribe } from "graphql";
-// import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 import WebSocket, { WebSocketServer as WSWebSocketServer } from "ws";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import { useServer } from "graphql-ws/lib/use/ws";
+import cors from "cors";
 
 const PORT = process.env.PORT;
 
 async function startServer() {
   const app = express();
+  app.use(logger("tiny"));
   app.use(graphqlUploadExpress());
+  // app.use(cors({ origin: "*" }));
 
   app.use("/static", express.static("uploads"));
   const httpServer = http.createServer(app);
@@ -58,6 +58,10 @@ async function startServer() {
       onDisconnect(ctx, code, reason) {
         console.log("Disconnected");
       },
+      // listen: {
+      //   port: PORT,
+      //   ip: "0.0.0.0", // bind to all available network interfaces
+      // },
     },
     wsServer
   );
@@ -95,22 +99,3 @@ async function startServer() {
 }
 
 startServer();
-
-// const subscriptionServer = SubscriptionServer.create(
-//   {
-//     schema,
-//     execute,
-//     subscribe,
-//     async onConnect({ token }, webSocket, context) {
-//       if (token === undefined) {
-//         throw new Error("You can't listen.");
-//       }
-//       console.log("subscribing?");
-//       const loggedInUser = await getUser(token);
-//       console.log("subscribing happend");
-//       return { loggedInUser };
-//     },
-//     onDisconnect(webScoket, context) {},
-//   },
-//   { server: httpServer, path: "/graphql" }
-// );

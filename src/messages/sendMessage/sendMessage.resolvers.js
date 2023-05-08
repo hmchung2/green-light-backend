@@ -70,7 +70,9 @@ export default {
         // pubsub.publish("MESSAGE_UPDATES", { messageUpdates: createdMessage });
 
         console.log("pubsub happend?");
-        return { ok: true, id: message.id };
+        const finalResult = { ok: true, id: message.id };
+        console.log("finalResult : ", finalResult);
+        return finalResult;
       }
     ),
   },

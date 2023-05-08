@@ -4,6 +4,7 @@ import { protectedResolver } from "../users.utils";
 export default {
   Query: {
     seeMatches: protectedResolver(async (_, { lastId }, { loggedInUser }) => {
+      console.log("loggedInUser.id : ", loggedInUser.id);
       const matches = await client.user.findMany({
         where: {
           AND: [
@@ -32,7 +33,6 @@ export default {
         skip: lastId ? 1 : 0,
         ...(lastId && { cursor: { id: lastId } }),
       });
-
       return matches;
     }),
   },

@@ -1,0 +1,113 @@
+PaaS Platforms
+Heroku
+
+# build
+
+-babel-cli
+allow run from package.json
+npm i @babel/cli --dev-only
+
+- create SRC folder and move everything into src folder
+
+- put command in package json
+ "build" : "babel src --out-dir build"
+
+ - run "npm run build"
+
+ - put command in package.json
+
+ - error shows up
+ needs : regenerator-runtime allows to use async function
+
+ - install regenerator
+ npm i regenerator-runtime
+ npm install --save-dev @babel/plugin-transform-runtime
+
+ - configure plugin
+ {
+  "plugins" : ["@babel/plugin-transform-runtime"] in babel.config.json
+ }
+
+ !!!now our code ready to run on server!!!
+ 
+
+ # deploy
+
+ - go to heroku
+
+ - download heroku and login
+
+ - remote heroku
+ heroku git:remote -a instaclone-backend-hm
+
+ -check
+ git remote -v
+
+-- heroku runs build command from packaage.json
+
+
+
+-- build into heroku
+
+(if you didnt init yet)$ git init 
+$ heroku git:remote -a instaclone-backend-hm
+
+$ git add .
+$ git commit -am "make it better"
+$ git push heroku master
+
+
+-- heroku looks also package-lock.json
+-- so  run
+delete 
+npm i
+git add .
+git commit -am "message"
+git push heroku master
+
+
+-- to view log
+run
+heroku logs --tail
+
+- enable playground for graphql
+server.js
+playground: true,
+
+- to fix 400 Apollo server error in the plaground
+server.js
+
+
+- look through .env to config variables in heroku stylelintcache
+ex PORT : 23763
+
+- configure database
+go to resouse tab in heroku and go to add on
+then i guess buy heroku-postgress
+
+
+- migrate databse to server
+- prisma migrate deploy
+
+-release phase
+-- create Procfile and put following lines
+release: prisma migrate deploy
+web: npm start  <-- check resource from dashboard
+
+try build
+
+
+#migrate prisma
+
+heroku login
+sudo snap install --classic heroku.
+heroku run bash
+npm install prisma -g.
+npx prisma migrate deploy.
+Follow the prompts to complete the migration.
+Note: Make sure you have added the heroku/nodejs buildpack and specified the correct version of Node.js in your package.json file before running the migration.
+
+
+#you can also set automatic deploy in your git branch on heroku website
+
+

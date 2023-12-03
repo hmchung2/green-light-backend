@@ -45,7 +45,7 @@
     "@babel/preset-env": "^7.20.2",
     "nodemon": "^2.0.20",
     "prettier-plugin-prisma": "^4.10.0",
-    "prisma": "^4.11.0"
+    "prisma": "^4.16.2"
   },
   "exports": {
     "./GraphQLUpload.js": "./GraphQLUpload.js",

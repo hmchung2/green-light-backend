@@ -83,14 +83,6 @@ CREATE TABLE "Room" (
 );
 
 -- CreateTable
-CREATE TABLE "temp" (
-    "id" BIGINT NOT NULL,
-    "info" CHAR,
-
-    CONSTRAINT "temp_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "_FollowRelation" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL

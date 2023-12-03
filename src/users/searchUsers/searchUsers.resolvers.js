@@ -21,15 +21,15 @@ export default {
                 },
               },
             ],
-            rooms: {
-              some: {
-                users: {
-                  some: {
-                    id: loggedInUser.id,
-                  },
-                },
-              },
-            },
+            // rooms: {
+            //   some: {
+            //     users: {
+            //       some: {
+            //         id: loggedInUser.id,
+            //       },
+            //     },
+            //   },
+            // },
           },
           take: 5,
           skip: lastId ? 1 : 0,

@@ -68,10 +68,7 @@ export default {
 
         pubsub.publish(NEW_MESSAGE, { roomUpdates: { ...message } });
         // pubsub.publish("MESSAGE_UPDATES", { messageUpdates: createdMessage });
-
-        console.log("pubsub happend?");
         const finalResult = { ok: true, id: message.id };
-        console.log("finalResult : ", finalResult);
         return finalResult;
       }
     ),

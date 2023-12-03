@@ -17,7 +17,7 @@ async function startServer() {
   const app = express();
   app.use(logger("tiny"));
   app.use(graphqlUploadExpress());
-  // app.use(cors({ origin: "*" }));
+  app.use(cors({ origin: "*" }));
 
   app.use("/static", express.static("uploads"));
   const httpServer = http.createServer(app);

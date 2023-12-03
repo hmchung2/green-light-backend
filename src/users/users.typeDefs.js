@@ -25,7 +25,7 @@ export default gql`
     userStatus: String
   }
 
-  type Query {
-    Users: [User]
-  }
+  # type Query {
+  #   Users: [User]
+  # }
 `;

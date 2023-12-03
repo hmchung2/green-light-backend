@@ -13,6 +13,9 @@ export default {
             some: { id: loggedInUser.id },
           },
         },
+        orderBy: {
+          id: "asc", // or 'desc' for descending order
+        },
       });
       console.log("seeRoom result : ", result);
       return result;

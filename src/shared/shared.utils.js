@@ -6,6 +6,7 @@ const region = "ap-northeast-2";
 const bucketName = "rsns-uploads-prod";
 const fullBucketUrl = `https://${bucketName}.s3.${region}.amazonaws.com/`;
 
+
 const s3client = new S3Client({
   region: "ap-northeast-2",
   credentials: {

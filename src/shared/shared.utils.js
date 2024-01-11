@@ -2,7 +2,7 @@ import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
 
 const region = "ap-northeast-2";
-const bucketName = "instaclone-uploads-hmchung";
+const bucketName = "rsns-uploads-prod";
 const fullBucketUrl = `https://${bucketName}.s3.${region}.amazonaws.com/`;
 
 const s3client = new S3Client({

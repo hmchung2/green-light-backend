@@ -19,25 +19,32 @@ export default {
       }
     ) => {
       try {
+
+        const whereClause = {};
+
+        if (username) {
+          whereClause.username = username;
+        }
+        if (email) {
+          whereClause.email = email;
+        }
+        if (instaUsername) {
+          whereClause.instaUsername = instaUsername;
+        }
+        if (phoneNo) {
+          whereClause.phoneNo = phoneNo;
+        }
+
+
         const existingUser = await client.user.findFirst({
           where: {
             OR: [
-              {
-                username,
-              },
-              {
-                email,
-              },
-              {
-                instaUsername,
-              },
-              {
-                phoneNo,
-              },
+              whereClause
             ],
           },
         });
         if (existingUser) {
+          console.log("existingUser : " ,existingUser);
           throw new Error(
             "This usernam or instaUsername or email or phoneNo  is already taken."
           );

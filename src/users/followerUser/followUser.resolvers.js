@@ -17,7 +17,6 @@ export default {
           error: "User not interested",
         };
       }
-
       await client.user.update({
         where: {
           id: loggedInUser.id,
@@ -30,7 +29,6 @@ export default {
           },
         },
       });
-
       return {
         ok: true,
       };

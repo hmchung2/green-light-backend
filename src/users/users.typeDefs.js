@@ -21,8 +21,11 @@ export default gql`
     createdAt: String!
     updatedAt: String!
     isFollowing: Boolean!
+    isFollower: Boolean!
     userType: String!
     userStatus: String
+    followersCount: Int!
+    followingCount: Int!
   }
 
   # type Query {

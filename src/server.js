@@ -15,7 +15,7 @@ const PORT = process.env.PORT;
 
 async function startServer() {
   const app = express();
-  app.use(logger("tiny"));
+  // app.use(logger("tiny"));
   app.use(graphqlUploadExpress());
   app.use(cors({ origin: "*" }));
 
@@ -71,7 +71,6 @@ async function startServer() {
     playground: true,
     introspection: true,
     context: async (ctx) => {
-      console.log("http");
       return {
         loggedInUser: await getUser(ctx.req.headers.token),
       };

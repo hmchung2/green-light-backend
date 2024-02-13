@@ -8,7 +8,6 @@ export default {
     updateLocation: protectedResolver(
       async (_, { lat, lon }, { loggedInUser }) => {
         try {
-          console.log("requested !!!!!!")
           const location = await client.location.update({
             where: {
               userId: loggedInUser.id,
@@ -19,8 +18,8 @@ export default {
             },
           });
           pubsub.publish(NEW_LOCATION, {
-            mapUpdates: { ...location, user: { ...loggedInUser } },
-          });
+            mapUpdates: { ...location, user: { ...loggedInUser }},
+          }).catch(e => console.error("Error publishing new location", e));
           return { ok: true };
         } catch (e) {
           console.log("error : ", e);

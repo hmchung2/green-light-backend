@@ -3,7 +3,7 @@ import { protectedResolver } from "../../users/users.utils";
 
 export default {
   Query: {
-    selectLocations: async (_, { lat, lon }, { loggedInUser }) => {
+    selectLocations: protectedResolver(async (_, { lat, lon }) => {
       console.log("ok");
       return client.location.findMany({
         where: {
@@ -21,6 +21,6 @@ export default {
           ],
         },
       });
-    },
+    }),
   },
 };

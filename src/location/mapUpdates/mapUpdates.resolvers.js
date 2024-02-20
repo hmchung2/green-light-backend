@@ -37,18 +37,28 @@ export default {
                                 },
                                 select: {lat: true, lon: true},
                             });
-                            if (
-                                userDetailLocation.lat && userDetailLocation.lon &&
-                                calculateDistance(
-                                    userDetailLocation.lat,
-                                    userDetailLocation.lon,
-                                    mapUpdates.lat,
-                                    mapUpdates.lon
-                                ) < 150
-                            ) {
-                                console.log("returning true");
-                                return true;
-                            }
+                            console.log("found unique : " ,userDetailLocation);
+                            return true;
+                            // if (
+                            //     userDetailLocation.lat && userDetailLocation.lon &&
+                            //     calculateDistance(
+                            //         userDetailLocation.lat,
+                            //         userDetailLocation.lon,
+                            //         mapUpdates.lat,
+                            //         mapUpdates.lon
+                            //     ) < 2000000000000000
+                            // ) {
+                            //     console.log("returning true");
+                            //     return true;
+                            // }else{
+                            //     const utilityDistance =  calculateDistance(
+                            //         userDetailLocation.lat,
+                            //         userDetailLocation.lon,
+                            //         mapUpdates.lat,
+                            //         mapUpdates.lon
+                            //     );
+                            //     console.log(utilityDistance);
+                            // }
                         }
                         console.log("returning false");
                         return false;

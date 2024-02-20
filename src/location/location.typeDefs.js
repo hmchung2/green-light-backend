@@ -10,4 +10,8 @@ export default gql`
     isMe: Boolean!
     vectorDistance: Float
   }
+  type LocationRoom{
+    id : Int!
+    locations : [Location!]
+  }
 `;

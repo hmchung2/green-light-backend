@@ -5,7 +5,7 @@ export default {
   Query: {
     selectLocations: protectedResolver(async (_, { lat, lon }) => {
       console.log("ok");
-      return client.location.findMany({
+      const locations = await client.location.findMany({
         where: {
           AND: [
             {
@@ -21,6 +21,11 @@ export default {
           ],
         },
       });
+      const locationRoom = {
+        id: 1,
+        locations: locations,
+      };
+      return locationRoom;
     }),
   },
 };

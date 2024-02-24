@@ -4,7 +4,7 @@ import { protectedResolver } from "../../users/users.utils";
 export default {
   Query: {
     selectLocations: protectedResolver(async (_, { lat, lon }) => {
-      console.log("ok");
+      console.log("fetching nearby users :  " , lat , "  :  " , lon);
       const locations = await client.location.findMany({
         where: {
           AND: [

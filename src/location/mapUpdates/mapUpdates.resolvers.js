@@ -26,6 +26,11 @@ export default {
                         {generalLat, generalLon},
                         {loggedInUser}
                     ) => {
+                        if(mapUpdates.userId == loggedInUser.id){
+                            console.log("updated object is the user so returning false")
+                            return false;
+                        }
+
                         if (
                             Math.abs(generalLat - mapUpdates.lat) < 0.05 &&
                             Math.abs(generalLon - mapUpdates.lon) < 0.05

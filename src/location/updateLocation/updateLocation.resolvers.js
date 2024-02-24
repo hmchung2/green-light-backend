@@ -7,6 +7,7 @@ export default {
   Mutation: {
     updateLocation: protectedResolver(
       async (_, { lat, lon }, { loggedInUser }) => {
+        console.log("updating locations!!!!!!!!!!!!!!! : "  , lat  , " :  ", lon );
         try {
           const location = await client.location.update({
             where: {

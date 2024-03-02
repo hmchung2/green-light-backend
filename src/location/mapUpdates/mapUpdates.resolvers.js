@@ -9,6 +9,7 @@ export default {
         mapUpdates: {
             subscribe: async (root, args, context, info) => {
                 console.log("mapUpdates id!!!!!!!!!!!!!!!!!! : " + context.loggedInUser.id);
+                console.log("args : " , args);
                 const location = await client.location.findFirst({
                     where: {
                         userId: context.loggedInUser.id,

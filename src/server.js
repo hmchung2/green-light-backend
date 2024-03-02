@@ -1,3 +1,5 @@
+import removeLocation from "./location/removeLocation/removeLocation.resolvers";
+
 require("dotenv").config();
 import express from "express";
 import http from "http";
@@ -43,6 +45,9 @@ async function startServer() {
     return { loggedInUser: null };
   };
 
+
+
+
   const serverCleanup = useServer(
     {
       schema,
@@ -57,6 +62,8 @@ async function startServer() {
       },
       onDisconnect(ctx, code, reason) {
         console.log("Disconnected");
+        console.log(ctx)
+        removeLocation(ctx.connectionParams.token);
       },
       // listen: {
       //   port: PORT,

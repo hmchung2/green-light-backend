@@ -14,11 +14,33 @@ export default {
                     where: {
                         userId: context.loggedInUser.id,
                     },
-                    select: {userId: true, lat : true , lon : true},
+                    select: {userId: true,
+                        lat : true,
+                        lon : true,
+                        user : {
+                           select:{
+                               id : true,
+                               avatar : true,
+                               username : true,
+                               sex : true,
+                           }
+                        }
+                    },
                 });
-                console.log(location.userId);
+                console.log("location : " , location);
                 if (!location || !location.lat || !location.lon) {
-                    throw new Error("No Location to be updated");
+                    const { generalLat, generalLon } = args;
+                    console.log("no data yet!!!!!!!")
+                    await client.location.update({
+                        data: {
+                            lat: generalLat,
+                            lon: generalLon
+                        },
+                        where: {
+                            userId: context.loggedInUser.id
+                        }
+                    });
+                    // throw new Error("No Location to be updated");
                 }
                 return withFilter(
                     () => pubsub.asyncIterator(NEW_LOCATION),
@@ -27,6 +49,7 @@ export default {
                         {generalLat, generalLon},
                         {loggedInUser}
                     ) => {
+                        console.log("filtering started")
                         if(mapUpdates.userId == loggedInUser.id){
                             console.log("updated object is the user so returning false")
                             return false;

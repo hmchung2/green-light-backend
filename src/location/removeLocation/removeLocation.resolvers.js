@@ -33,7 +33,6 @@ import {getUser, protectedResolver} from "../../users/users.utils";
 
 
 export default async function removeLocation(token) {
-    console.log("Removing location for user:", token);
     if(token){
         const loggedInUser = await getUser(token);
         if(loggedInUser.id){

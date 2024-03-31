@@ -62,7 +62,6 @@ async function startServer() {
       },
       onDisconnect(ctx, code, reason) {
         console.log("Disconnected");
-        console.log(ctx)
         removeLocation(ctx.connectionParams.token);
       },
       // listen: {

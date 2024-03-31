@@ -7,11 +7,11 @@ export default {
 
     isFollowing: async ({ userId }, _, { loggedInUser }) => {
       if (!loggedInUser) {
-        console.log("not loged in");
+        console.log("not logged in");
         return false;
       }
       console.log("userId : " + userId);
-      console.log("loggedInuser : ", loggedInUser);
+      console.log("loggedInUser : ", loggedInUser);
 
       const exist = await client.user.count({
         where: {

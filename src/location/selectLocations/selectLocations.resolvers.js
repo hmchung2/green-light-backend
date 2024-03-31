@@ -3,7 +3,7 @@ import { protectedResolver } from "../../users/users.utils";
 
 export default {
   Query: {
-    selectLocations: protectedResolver(async (_, { lat, lon }) => {
+    selectLocations: protectedResolver(async (_, { lat, lon }, { loggedInUser }) => {
       console.log("fetching nearby users :  " , lat , "  :  " , lon);
       const locations = await client.location.findMany({
         where: {
@@ -18,8 +18,27 @@ export default {
                 lte: lon + 0.05,
               },
             },
+            {
+              userId: {
+                not: loggedInUser.id,
+              },
+            },
           ],
         },
+        select : {
+          userId: true,
+          lat : true,
+          lon : true,
+          user :{
+            select : {
+              id : true,
+              avatar : true,
+              username : true,
+              sex : true,
+            }
+          }
+        }
+
       });
       const locationRoom = {
         id: 1,

@@ -22,6 +22,11 @@ export default {
               userId: {
                 not: loggedInUser.id,
               },
+              user: {
+                sex: {
+                  not: loggedInUser.sex, // Exclude users of the same sex as loggedInUser
+                },
+              },
             },
           ],
         },

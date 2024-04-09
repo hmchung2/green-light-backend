@@ -33,6 +33,7 @@ model User {
   userType       String
   userStatus     String
   Alarm          Alarm[]
+  description    String?
 }
 
 model Location {

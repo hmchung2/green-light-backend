@@ -26,6 +26,7 @@ export default gql`
     userStatus: String
     followersCount: Int!
     followingCount: Int!
+    description : String
   }
 
   # type Query {

@@ -27,6 +27,7 @@ export default gql`
     followersCount: Int!
     followingCount: Int!
     description : String
+    isMe : Boolean!
   }
 
   # type Query {

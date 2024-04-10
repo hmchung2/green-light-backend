@@ -56,5 +56,12 @@ export default {
         },
       });
     },
+    isMe: ({ id }, _, { loggedInUser }) => {
+      // Check if the loggedInUser exists and if their id matches the id of the user being resolved
+      if (!loggedInUser) {
+        return false;
+      }
+      return id === loggedInUser.id;
+    },
   },
 };

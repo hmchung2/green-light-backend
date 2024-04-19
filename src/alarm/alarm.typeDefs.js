@@ -12,7 +12,8 @@ export default gql`
   }
 
   type Alarms {
-    unreadTotal: Int!
-    alarms: [Alarm]
+    id: Int!
+    new: Boolean!
+    alarms: [Alarm!]!  # Ensures an empty list instead of null
   }
 `;

@@ -17,8 +17,6 @@ const s3client = new S3Client({
 
 export const deleteFromS3 = async (fileUrl) => {
   const decodedUrl = decodeURI(fileUrl).split(fullBucketUrl)[1];
-  console.log("decodedUrl : ", decodedUrl);
-
   const input = {
     Bucket: bucketName,
     Key: decodedUrl,

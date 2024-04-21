@@ -2,12 +2,13 @@ import client from "../../client";
 import { NEW_MESSAGE } from "../../constant";
 import pubsub from "../../pubsub";
 import { protectedResolver } from "../../users/users.utils";
+import { Message } from '@prisma/client';
 
 export default {
   Mutation: {
     sendMessage: protectedResolver(
       async (_, { payload, roomId, userId }, { loggedInUser }) => {
-        console.log("whatup");
+        console.log("what up");
         let room = null;
         if (userId) {
           const user = await client.user.findUnique({
@@ -50,7 +51,7 @@ export default {
           }
         }
 
-        const message = await client.message.create({
+        const message  = await client.message.create({
           data: {
             payload,
             room: {
@@ -66,7 +67,7 @@ export default {
           },
         });
 
-        pubsub.publish(NEW_MESSAGE, { roomUpdates: { ...message } });
+        pubsub.publish(NEW_MESSAGE, { roomUpdates: { ...message } }).catch(err => console.error("Error publishing message:", err));
         // pubsub.publish("MESSAGE_UPDATES", { messageUpdates: createdMessage });
         const finalResult = { ok: true, id: message.id };
         return finalResult;

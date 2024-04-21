@@ -5,6 +5,7 @@ export default {
   Query: {
     selectLocations: protectedResolver(async (_, { lat, lon }, { loggedInUser }) => {
       console.log("fetching nearby users :  " , lat , "  :  " , lon);
+      console.log("loggedInUser : " , loggedInUser.id);
       const locations = await client.location.findMany({
         where: {
           AND: [

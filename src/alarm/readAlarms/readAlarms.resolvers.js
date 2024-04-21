@@ -3,19 +3,29 @@ import { protectedResolver } from "../../users/users.utils";
 
 export default {
   Query: {
-    readAlarms: protectedResolver(async (_, { page = 1 }, { loggedInUser }) => {
-      const pageSize = 10;
+    readAlarms: protectedResolver(async (_, { cursor }, { loggedInUser }) => {
+      const pageSize = 3;
       const alarms = await client.alarm.findMany({
         where: {
           userId: loggedInUser.id,
         },
-        skip: (page - 1) * pageSize,
-        take: pageSize,
+        take: pageSize + 1, // Fetch one extra item to check if there's a next page
+        cursor: cursor ? { id: cursor } : undefined,
+        skip: cursor ? 1 : 0,
         orderBy: {
           createdAt: "desc",
         },
       });
-      return alarms;
+      const hasNextPage = alarms.length > pageSize;
+      const alarmsToReturn = hasNextPage ? alarms.slice(0, -1) : alarms;
+      const result = {
+        alarms : alarmsToReturn,
+        pageInfo : {
+          endCursor: alarmsToReturn.length > 0 ? alarmsToReturn[alarmsToReturn.length - 1].id : null,
+          hasNextPage
+        }
+      }
+      return result;
     }),
   },
 };

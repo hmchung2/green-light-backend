@@ -4,4 +4,8 @@ export default `#graphql
         error :  String
         id: Int
     }
+    type PageInfo{
+        endCursor: Int
+        hasNextPage: Boolean!
+    }
 `;

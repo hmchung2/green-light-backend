@@ -9,6 +9,8 @@ export default gql`
     seen: Boolean!
     msg: String!
     detail: String
+    alarmType: Int!
+    targetId: Int
     createdAt: String!
     updatedAt: String!
   }

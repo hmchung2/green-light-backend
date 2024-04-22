@@ -5,7 +5,8 @@ import {NEW_ALARM} from "../../constant";
 export const mutualAlarm = async (loggedInUser, targetUser) =>{
     const userAlarm = await client.alarm.create({
         data: {
-            msg : "Green Light Alarm -> " + targetUser.username,
+            msg : "Green Light!",
+            detail: "You have a green light with " + targetUser.username,
             user: {
                 connect: {
                     id: loggedInUser.id
@@ -15,7 +16,8 @@ export const mutualAlarm = async (loggedInUser, targetUser) =>{
     })
     const targetAlarm = await client.alarm.create({
         data: {
-            msg : "Green Light Alarm -> " + loggedInUser.username,
+            msg : "Green Light!",
+            detail: "You have a green light with " + loggedInUser.username,
             user: {
                 connect: {
                     id: targetUser.id

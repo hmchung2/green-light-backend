@@ -72,6 +72,8 @@ model Alarm {
   seen      Boolean  @default(false)
   msg       String
   detail    String?
+  alarmType Int      @default(0)
+  targetId  Int?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

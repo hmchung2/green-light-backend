@@ -4,7 +4,7 @@ import { protectedResolver } from "../../users/users.utils";
 export default {
   Query: {
     readAlarms: protectedResolver(async (_, { cursor }, { loggedInUser }) => {
-      const pageSize = 3;
+      const pageSize = 10;
       const alarms = await client.alarm.findMany({
         where: {
           userId: loggedInUser.id,

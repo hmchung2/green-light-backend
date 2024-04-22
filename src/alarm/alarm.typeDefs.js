@@ -11,6 +11,7 @@ export default gql`
     detail: String
     alarmType: Int!
     targetId: Int
+    alarmImg: String
     createdAt: String!
     updatedAt: String!
   }

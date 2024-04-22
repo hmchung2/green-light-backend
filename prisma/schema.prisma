@@ -69,7 +69,9 @@ model Alarm {
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
   read      Boolean  @default(false)
+  seen      Boolean  @default(false)
   msg       String
+  detail    String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

@@ -29,7 +29,7 @@ npm i @babel/cli --dev-only
  }
 
  !!!now our code ready to run on server!!!
- 
+
 
  # deploy
 
@@ -49,7 +49,7 @@ npm i @babel/cli --dev-only
 
 -- build into heroku
 
-(if you didnt init yet)$ git init 
+(if you didnt init yet)$ git init
 $ heroku git:remote -a instaclone-backend-hm
 
 $ git add .
@@ -59,7 +59,7 @@ $ git push heroku master
 
 -- heroku looks also package-lock.json
 -- so  run
-delete 
+delete
 npm i
 git add .
 git commit -am "message"
@@ -111,3 +111,5 @@ Note: Make sure you have added the heroku/nodejs buildpack and specified the cor
 #you can also set automatic deploy in your git branch on heroku website
 
 
+final migration command
+npx prisma migrate dev --name add_seen_alarm

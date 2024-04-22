@@ -6,7 +6,9 @@ export default gql`
     userId: Int!
     user: User!
     read: Boolean!
+    seen: Boolean!
     msg: String!
+    detail: String
     createdAt: String!
     updatedAt: String!
   }

@@ -19,6 +19,7 @@ export default {
       const hasNextPage = alarms.length > pageSize;
       const alarmsToReturn = hasNextPage ? alarms.slice(0, -1) : alarms;
       const result = {
+        id : 1,
         alarms : alarmsToReturn,
         pageInfo : {
           endCursor: alarmsToReturn.length > 0 ? alarmsToReturn[alarmsToReturn.length - 1].id : null,

@@ -21,10 +21,9 @@ export default {
       } else if (alarm.read) {
         return {
           ok: false,
-          error: "Alram Already Read",
+          error: "Alarm Already Read",
         };
       }
-
       await client.alarm.update({
         where: {
           id,

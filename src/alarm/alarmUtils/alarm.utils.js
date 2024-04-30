@@ -11,7 +11,10 @@ export const mutualAlarm = async (loggedInUser, targetUser) =>{
                 connect: {
                     id: loggedInUser.id
                 }
-            }
+            },
+            alarmType : 1,
+            alarmImg : targetUser.avatar,
+            targetId : targetUser.id,
         }
     })
     const targetAlarm = await client.alarm.create({
@@ -22,7 +25,10 @@ export const mutualAlarm = async (loggedInUser, targetUser) =>{
                 connect: {
                     id: targetUser.id
                 }
-            }
+            },
+            alarmType : 1,
+            alarmImg : loggedInUser.avatar,
+            targetId : loggedInUser.id,
         }
     })
     console.log("pubsub");

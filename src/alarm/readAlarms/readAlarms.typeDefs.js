@@ -3,10 +3,10 @@ import { gql } from "graphql-tag";
 export default gql`
   type ReadAlarmsResponse{
     id : Int!
-    alarms: [Alarm!]!
-    pageInfo: PageInfo!
+    endPage : Boolean!
+    result: [Alarm!]!
   }
   type Query {
-    readAlarms(cursor: Int): ReadAlarmsResponse!
+    readAlarms(offset: Int!): ReadAlarmsResponse!
   }
 `;

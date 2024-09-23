@@ -1,6 +1,6 @@
 import client from "../../client";
 import bcrypt from "bcrypt";
-import { uploadToS3 } from "../../shared/shared.utils";
+import { uploadToS3 } from "../../shared/s3.utils";
 
 export default {
   Mutation: {

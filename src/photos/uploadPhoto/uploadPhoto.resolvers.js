@@ -1,5 +1,5 @@
 import client from "../../client";
-import { uploadToS3 } from "../../shared/shared.utils";
+import { uploadToS3 } from "../../shared/s3.utils";
 import { protectedResolver } from "../../users/users.utils";
 
 export default {

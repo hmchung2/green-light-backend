@@ -1,5 +1,5 @@
 import client from "../../client";
-import { deleteFromS3 } from "../../shared/shared.utils";
+import { deleteFromS3 } from "../../shared/s3.utils";
 import { protectedResolver } from "../../users/users.utils";
 
 export default {

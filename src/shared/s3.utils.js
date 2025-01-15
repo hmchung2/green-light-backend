@@ -7,9 +7,9 @@ const bucketName = "rsns-uploads-prod";
 const fullBucketUrl = `https://${bucketName}.s3.${region}.amazonaws.com/`;
 //https://rsns-uploads-prod.s3.ap-northeast-2.amazonaws.com/avatars/glawdys-hodiesne-sans-titre-1.jpg
 
-export const isFileFromS3 = (url) =>{
-  return url.startsWith(fullBucketUrl);
-}
+export const isFileFromS3 = (url) => {
+  return typeof url === 'string' && url.startsWith(fullBucketUrl);
+};
 
 const s3client = new S3Client({
   region: "ap-northeast-2",

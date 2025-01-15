@@ -5,7 +5,8 @@ export default gql`
   
   input PhotoInput {
     id: Int
-    originalFile : String
+    originalId: Int
+    originalFileUrl : String
     file: Upload
   }
 
@@ -16,7 +17,7 @@ export default gql`
       gender: String
       birthDay: String
       avatar: Upload
-      photos: [PhotoInput]
+      photos: [PhotoInput]!
     ): MutationResponse!
   }
 `;

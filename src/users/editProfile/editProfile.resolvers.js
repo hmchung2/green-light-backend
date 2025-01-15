@@ -1,8 +1,6 @@
-import { createWriteStream } from "fs";
 import client from "../../client";
-import bcrypt from "bcrypt";
 import { protectedResolver } from "../users.utils";
-import { isFileFromS3, uploadToS3 } from "../../shared/s3.utils";
+import { deleteFromS3, uploadToS3 } from "../../shared/s3.utils";
 
 export default {
   Mutation: {
@@ -17,74 +15,48 @@ export default {
           if (avatar) {
             avatarUrl = await uploadToS3(avatar, loggedInUser.id, "avatars");
           }
-          console.log("avatarUrl : ", avatarUrl);
-
+          console.log("photos : " , photos)
           if (photos && photos.length > 0) {
-            console.log("photos : ", photos);
-            const photoUploadPromises = photos.map(async (photo) => {
-              if (!photo.id && photo.file) {
-                console.log("new photo");
-                const fileUrl = await uploadToS3(
-                  photo.file,
-                  loggedInUser.id,
-                  "uploads",
-                );
-                console.log(fileUrl);
-                return client.photo.create({
-                  data: {
-                    file: fileUrl,
-                    user: {
-                      connect: {
-                        id: loggedInUser.id,
+            for (const photo of photos) {
+              if (!photo.originalId || photo.id !== photo.originalId) {
+                if (photo.originalId) {
+                  console.log("removing original id:", photo.originalId);
+                  await deleteFromS3(photo.originalFileUrl);
+                  await client.photo.delete({
+                    where: { id: photo.originalId },
+                  });
+                }
+                if (photo.file) {
+                  console.log("inserting new file");
+                  const fileUrl = await uploadToS3(
+                      photo.file,
+                      loggedInUser.id,
+                      "uploads"
+                  );
+                  await client.photo.create({
+                    data: {
+                      file: fileUrl,
+                      user: {
+                        connect: {
+                          id: loggedInUser.id,
+                        },
                       },
                     },
-                  },
-                });
-              } else if (photo.id && !photo.file) {
-                console.log("delete photo");
-                const deleted = await deleteFromS3(photo.file);
-                if (!deleted) {
-                  console.error("failed to delete photo : ", photo.file);
-                }
-                return client.photo.delete({
-                  where: { id: photo.id },
-                });
-              } else if (photo.id && photo.file) {
-                if (!isFileFromS3(photo.file)) {
-                  console.log("replace photo");
-                  const existingPhoto = await client.photo.findUnique({
-                    where: { id: photo.id },
-                    select: { file: true },
-                  });
-                  const deleted = await deleteFromS3(existingPhoto.file);
-                  if (!deleted) {
-                    console.error("failed to delete photo : ", photo.file);
-                  }
-                  const fileUrl = await uploadToS3(
-                    photo.file,
-                    loggedInUser.id,
-                    "uploads",
-                  );
-                  return client.photo.update({
-                    where: { id: photo.id },
-                    data: { file: fileUrl },
                   });
                 }
-              } else {
-                return null;
               }
-            });
-            await Promise.all(photoUploadPromises);
+            }
           }
+          const updatedData = {};
+          if (username) updatedData.username = username;
+          if (description) updatedData.description = description;
+          if (gender) updatedData.gender = gender;
+          if (birthDay) updatedData.birthDay = birthDay;
+          if (avatar) updatedData.avatar = avatarUrl;
+
           await client.user.update({
             where: { id: loggedInUser.id },
-            data: {
-              username,
-              description,
-              sex: gender,
-              birthDay,
-              ...(avatarUrl && { avatar: avatarUrl }),
-            },
+            data: updatedData,
           });
           return {
             ok: true,

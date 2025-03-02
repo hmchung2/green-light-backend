@@ -1,16 +1,17 @@
 import client from "../../client";
-import { NEW_MESSAGE } from "../../constant";
+import { CHAT_LIST_UPDATES, NEW_MESSAGE } from "../../constant";
 import pubsub from "../../pubsub";
 import { protectedResolver } from "../../users/users.utils";
-import { Message } from '@prisma/client';
 
 export default {
   Mutation: {
     sendMessage: protectedResolver(
       async (_, { payload, roomId, userId }, { loggedInUser }) => {
-        console.log("what up");
         let room = null;
+        let userList = [];
+
         if (userId) {
+          console.log("userId available");
           const user = await client.user.findUnique({
             where: {
               id: userId,
@@ -19,11 +20,9 @@ export default {
               id: true,
             },
           });
-          console.log("here?");
           if (!user) {
             return { ok: false, error: "This user does not exist" };
           }
-
           room = await client.room.create({
             data: {
               users: {
@@ -31,16 +30,21 @@ export default {
               },
             },
           });
-          console.log("error 1");
           roomId = room.id;
-          console.log("error 2");
+          userList = [userId];
         } else if (roomId) {
+          console.log("roomId available");
           room = await client.room.findUnique({
             where: {
               id: roomId,
             },
             select: {
               id: true,
+              users: {
+                select: {
+                  id: true,
+                },
+              },
             },
           });
           if (!room) {
@@ -49,9 +53,10 @@ export default {
               error: "Room Not found",
             };
           }
+          userList = room.users.map((user) => user.id);
         }
 
-        const message  = await client.message.create({
+        const message = await client.message.create({
           data: {
             payload,
             room: {
@@ -66,12 +71,22 @@ export default {
             },
           },
         });
+        console.log("User List for Notification:", userList);
+        console.log("now firing pubsub to users");
+        userList.forEach((userId) => {
+          pubsub.publish(CHAT_LIST_UPDATES, {
+            chatListUpdates: {
+              roomId,
+              id: userId, // Each user gets their own event
+              lastMessage: message,
+            },
+          });
+        });
 
-        pubsub.publish(NEW_MESSAGE, { roomUpdates: { ...message } }).catch(err => console.error("Error publishing message:", err));
+        pubsub.publish(NEW_MESSAGE, { roomUpdates: { ...message } }).catch((err) => console.error("Error publishing message:", err));
         // pubsub.publish("MESSAGE_UPDATES", { messageUpdates: createdMessage });
-        const finalResult = { ok: true, id: message.id };
-        return finalResult;
-      }
+        return { ok: true, id: message.id };
+      },
     ),
   },
 };

@@ -64,6 +64,15 @@ model Message {
   updatedAt DateTime @updatedAt
 }
 
+model EmailVerification {
+  id         Int      @id @default(autoincrement())
+  email      String   @unique
+  code       String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+}
+
+
 model Alarm {
   id        Int      @id @default(autoincrement())
   userId    Int

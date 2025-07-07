@@ -3,8 +3,8 @@ import { protectedResolver } from "../../users/users.utils";
 
 export default {
   Query: {
-    readAlarms: protectedResolver(async(_, { offset }, { loggedInUser }) => {
-      console.log("offset -> " , offset);
+    readAlarms: protectedResolver(async (_, { offset }, { loggedInUser }) => {
+      console.log("offset -> ", offset);
       const pageSize = 10;
       const alarms = await client.alarm.findMany({
         take: pageSize, // Fetch one extra item to check if there's a next page
@@ -17,11 +17,15 @@ export default {
         },
       });
       const result = {
-        id : 1,
-        endPage : alarms.length < 10 ? true : false,
-        result : alarms,
-      }
-      return result;
+        id: 1,
+        endPage: alarms.length < 10,
+        result: alarms,
+      };
+      return {
+        id: 1,
+        endPage: alarms.length < 10,
+        result: alarms,
+      };
     }),
   },
 };

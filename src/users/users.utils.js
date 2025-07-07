@@ -13,7 +13,7 @@ export const getUser = async (token) => {
     if (user) {
       return user;
     } else {
-      console.log("user not found from the token");
+      // console.log("user not found from the token");
       return null;
     }
   } catch (e) {

@@ -7,7 +7,8 @@ import { ApolloServer } from "apollo-server-express";
 import logger from "morgan";
 import schema from "./schema";
 import { getUser } from "./users/users.utils";
-import graphqlUploadExpress from "graphql-upload/graphqlUploadExpress.js";
+import graphqlUploadExpress from "graphql-upload/graphqlUploadExpress.mjs";
+
 import WebSocket, { WebSocketServer as WSWebSocketServer } from "ws";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import { useServer } from "graphql-ws/lib/use/ws";
@@ -17,10 +18,14 @@ const PORT = process.env.PORT;
 
 async function startServer() {
   const app = express();
-  // app.use(logger("tiny"));
-  app.use(graphqlUploadExpress());
+
+  // (권장) CORS 먼저
   app.use(cors({ origin: "*" }));
 
+  // 그 다음 업로드 미들웨어
+  app.use(graphqlUploadExpress());
+
+  // 정적 파일
   app.use("/static", express.static("uploads"));
   const httpServer = http.createServer(app);
 
@@ -76,6 +81,7 @@ async function startServer() {
     schema,
     playground: true,
     introspection: true,
+    uploads: false,
     context: async (ctx) => {
       return {
         loggedInUser: await getUser(ctx.req.headers.token),

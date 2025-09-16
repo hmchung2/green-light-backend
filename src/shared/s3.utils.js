@@ -1,7 +1,5 @@
 import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
-
-
 const region = "ap-northeast-2";
 const bucketName = "rsns-uploads-prod";
 const fullBucketUrl = `https://${bucketName}.s3.${region}.amazonaws.com/`;
@@ -37,38 +35,20 @@ export const deleteFromS3 = async (fileUrl) => {
 };
 
 export const uploadToS3 = async (file, userId, folderName) => {
-  const cfile = await file;
-  const { filename, createReadStream, mimetype } = cfile.file;
-  const readStream = createReadStream();
+  const { createReadStream, filename, mimetype } = await file;
+  const fileStream = createReadStream(); // ✅ 반드시 여기서만 한번 소비
+
   const objectName = `${folderName}/${userId}-${Date.now()}-${filename}`;
-
-  // Set the appropriate content type based on the file's MIME type
-  let contentType;
-  if (mimetype === "image/jpeg" || mimetype === "image/jpg") {
-    contentType = "image/jpeg";
-  } else if (mimetype === "image/png") {
-    contentType = "image/png";
-  } else {
-    throw new Error("File type not supported"); // throw error if file type is not supported
-  }
-
   const upload = new Upload({
     client: s3client,
     params: {
       Bucket: bucketName,
       Key: objectName,
-      Body: readStream,
+      Body: fileStream,
       ACL: "public-read",
-      ContentType: contentType,
+      ContentType: mimetype,
     },
   });
 
-  try {
-    const res = await upload.done();
-    const url = res.Location;
-    return url;
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
+  return (await upload.done()).Location;
 };

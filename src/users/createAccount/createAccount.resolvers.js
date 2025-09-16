@@ -20,68 +20,68 @@ export default {
     ) => {
       try {
 
-        const whereClause = {};
-
+        const orConditions = [];
+    
         if (username) {
-          whereClause.username = username;
+          orConditions.push({ username });
         }
         if (email) {
-          whereClause.email = email;
+          orConditions.push({ email });
         }
-        if (instaUsername) {
-          whereClause.instaUsername = instaUsername;
-        }
-        if (phoneNo) {
-          whereClause.phoneNo = phoneNo;
-        }
-
-
+        console.log("whereClause : ", orConditions);
         const existingUser = await client.user.findFirst({
           where: {
-            OR: [
-              whereClause
-            ],
+            OR: orConditions,
           },
         });
-        if (existingUser) {
-          console.log("existingUser : " ,existingUser);
-          throw new Error(
-            "This usernam or instaUsername or email or phoneNo  is already taken."
-          );
-        }
-        const bcyrptPassword = await bcrypt.hash(password, 10);
-        console.log("avatar : ", avatar);
-        let avatarUrl = null;
-        if (avatar) {
-          console.log("avatar exists : ", avatar);
-          avatarUrl = await uploadToS3(avatar, username, "avatars");
-          console.log("avatarUrl : ", avatarUrl);
-        }
+        // todo 개발 끝나고 주석 취소
+        // if (existingUser) {
+        //   return { ok: false, error: "This username or email is already taken." };
+        // }
 
-        await client.$transaction([
-          client.user.create({
+
+        const bcyrptPassword = await bcrypt.hash(password, 10);
+ 
+        const avatarUrl = avatar
+          ? await uploadToS3(avatar, username, "avatars")
+          : null;
+
+        await client.$transaction(async (tx) => {
+          const newUser = await tx.user.create({
             data: {
               username,
               sex,
               interestingSex,
               birthDay,
               phoneNo,
-              email,
+              // email, //  todo 🔹 개발 중에는 optional → unique constraint 충돌 방지용으로 주석 처리
               instaUsername,
               password: bcyrptPassword,
               userType: "P",
               userStatus: "M",
               ...(avatarUrl && { avatar: avatarUrl }),
             },
-          }),
-          client.location.create({
+          });
+
+          await tx.location.create({
             data: {
               user: {
-                connect: { username },
+                connect: { id: newUser.id },
               },
             },
-          }),
-        ]);
+          });
+
+          await tx.alarm.create({
+            data: {
+              userId: newUser.id,
+              msg: `🎉 Welcome, ${username}!`,
+              detail : "Thank you for joining us. Let's start your journey!",
+              alarmType: 0,
+              read: false,
+              seen: false,
+            },
+          });
+        });
 
         return {
           ok: true,
